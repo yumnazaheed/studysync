@@ -10,7 +10,7 @@ const Auth = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log('User  signed in:', user);
+      console.log('User signed in:', user);
     } catch (error) {
       console.error('Error signing in:', error);
     }
@@ -19,7 +19,7 @@ const Auth = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      console.log('User  signed out');
+      console.log('User signed out');
     } catch (error) {
       console.error('Error signing out:', error);
     }
