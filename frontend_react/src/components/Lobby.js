@@ -1,15 +1,14 @@
-// src/components/Lobby.js
+// src/components/LobbyList.js
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, query, where, onSnapshot, addDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 
-
-const Lobby = () => {
+const LobbyList = () => {
   const [lobbies, setLobbies] = useState([]);
-  const [lobbyName, setLobbyName] = useState('');
 
+  // Listen for available lobbies
   useEffect(() => {
-    // Query lobbies that are NOT full (maxCapacity = 5 in this example)
     const q = query(
       collection(db, 'lobbies'),
       where('currentMembers', '<', 5)
@@ -18,29 +17,38 @@ const Lobby = () => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const lobbyData = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data()        // no TypeScript assertion here
+        ...doc.data()
       }));
       setLobbies(lobbyData);
     });
 
-    return () => unsubscribe(); // Clean up listener on unmount
+    return () => unsubscribe(); // cleanup on unmount
   }, []);
 
-  // const createLobby = async () => {
-  //   try {
-  //     await addDoc(collection(db, 'lobbies'), {
-  //       name: lobbyName,
-  //       createdAt: new Date(),
-  //     });
-  //     console.log('Lobby created:', lobbyName);
-  //     setLobbyName('');
-  //   } catch (error) {
-  //     console.error('Error creating lobby:', error);
-  //   }
-  // };
+  // Sign out handler
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  // Simple inline styles object
+  const styles = {
+    signOutButton: {
+      marginBottom: '1rem',
+      padding: '0.5rem 1rem',
+      cursor: 'pointer'
+    }
+  };
 
   return (
     <div>
+      <button style={styles.signOutButton} onClick={handleSignOut}>
+        Sign Out
+      </button>
+
       <h2>Available Lobbies</h2>
       <ul>
         {lobbies.map(lobby => {

@@ -1,39 +1,29 @@
-// src/App.js
-import React from 'react';
-import Auth from './components/Auth';
-import Lobby from './components/Lobby';
+import React, { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase';
+import Auth from './components/Auth';
+import Home from './components/Home';
+import Lobby from './components/Lobby';
 
 const App = () => {
-  const [user, setUser ] = React.useState(null);
+  const [user, setUser ] = useState(null);
+  const [currentPage, setCurrentPage] = useState('home');
 
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser (user);
-      } else {
-        setUser (null);
-      }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser (u);
     });
-
     return () => unsubscribe();
   }, []);
 
-  return (
-    <div>
-      <h1>StudySync</h1>
-      {user ? (
-        <div>
-          <h2>Welcome, {user.displayName}</h2>
-          <Lobby />
-        </div>
-      ) : (
-        <Auth />
-      )}
-    </div>
-  );
+  const renderPage = () => {
+    if (!user) return <Auth />;
+    if (currentPage === 'home') return <Home user={user} setCurrentPage={setCurrentPage} />;
+    if (currentPage === 'lobby') return <Lobby user={user} setCurrentPage={setCurrentPage} />;
+    return <div>Invalid Page</div>;
+  };
+
+  return <div>{renderPage()}</div>;
 };
 
 export default App;
-
