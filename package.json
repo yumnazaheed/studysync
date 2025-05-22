@@ -1,4 +1,10 @@
 {
+  "name": "studysync",
+  "version": "1.0.0",
+  "description": "Meet, match, and thrive together at UNSW",
+  "scripts": {
+    "build": "mkdir -p public && cp index.html styles.css public/"
+  },
   "dependencies": {
     "firebase": "^11.7.3"
   }
