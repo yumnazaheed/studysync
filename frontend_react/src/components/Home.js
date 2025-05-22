@@ -2,7 +2,7 @@ import React from 'react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 
-const Lobby = ({ user }) => {
+const Home = ({ user, setCurrentPage }) => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -13,8 +13,10 @@ const Lobby = ({ user }) => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.welcome}>Lobby</h2>
-      <p style={styles.message}>Welcome to the lobby, {user.displayName}!</p>
+      <h2 style={styles.welcome}>Welcome, {user.displayName}!</h2>
+      <button style={styles.lobbyButton} onClick={() => setCurrentPage('lobby')}>
+        Go to Lobby
+      </button>
       <button style={styles.signOutButton} onClick={handleSignOut}>
         Sign Out
       </button>
@@ -26,4 +28,4 @@ const styles = {
   // styles here
 };
 
-export default Lobby;
+export default Home;
