@@ -1,6 +1,7 @@
 import React from 'react';
 import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 
 const Auth = () => {
   const provider = new GoogleAuthProvider();
@@ -14,9 +15,18 @@ const Auth = () => {
     }
   };
 
+    const handleSignOut = async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error('Error signing out:', error);
+      }
+    };
+
   return (
     <>
       <div class="header-spacer"></div>
+  
       <header class="header">
         <div class="container header-container">
           <div class="header-content">
@@ -33,10 +43,13 @@ const Auth = () => {
               <div class="hover-indicator"></div>
             </nav>
             <div class="auth-links">
-              <button style={styles.signInButton} onClick={handleSignIn}>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google logo" style={styles.googleLogo} />
-                Sign in with Google
-               </button>
+              <button>
+                Profile
+              </button>
+              <button style={styles.signOutButton} onClick={handleSignOut}>
+                {/* <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google logo" style={styles.googleLogo} /> */}
+                Sign Out
+              </button>
             </div>
             <button class="mobile-menu-btn">
               <i class="fas fa-bars"></i>
